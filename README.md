@@ -1,3 +1,5 @@
 # Slime
 
-A view pressed like a slime.
+A button pressed like a slime.
+
+![Example](Example.mov)
