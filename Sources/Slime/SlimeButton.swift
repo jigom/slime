@@ -19,59 +19,51 @@ public struct SlimeButton: View {
     LiquidCard(title: title, color: color) {
       SoundManager.shared.playBlob()
       
-      self.action()
+      blobView.animationSpeed = 5
+      blobView.play(fromProgress: pressBlob ? 0 : 0.1, toProgress: pressBlob ? 0.1 : 0)
       
-      DispatchQueue.main.asyncAfter(deadline: .now()) {
-        blobView.animationSpeed = 5
-        blobView.play(fromProgress: pressBlob ? 0 : 0.2, toProgress: pressBlob ? 0.2 : 0){ status in
-          pressBlob.toggle()
-        }
-      }
+      pressBlob.toggle()
+      self.action()
     }
-    .padding()
   }
   
   @ViewBuilder
-  func LiquidCard(title: String, color: SwiftUI.Color, onExpand: @escaping () -> ()) -> some View {
-    ZStack {
-      if #available(iOS 15.0, *) {
-        Text(title)
-          .font(.system(size: 20))
-          .bold()
-          .frame(width: UIScreen.main.bounds.height * 0.1 + 75, height: UIScreen.main.bounds.height * 0.1 + 25)
-          .background(color)
-          .onTapGesture {
-            onExpand()
-          }
-          .mask {
-            GeometryReader { proxy in
-              let scaleWidth = proxy.size.width / 1000
-              let scaleHeight = proxy.size.height / 1200
-              
-              LottieView(lottieView: $blobView)
-                .scaleEffect(x: scaleWidth, y: scaleHeight, anchor: .topLeading)
-            }
-          }
-      } else {
-        Text(title)
-          .font(.system(size: 20))
-          .bold()
-          .foregroundColor(Color(.label))
-          .frame(width: UIScreen.main.bounds.height * 0.1 + 100, height: UIScreen.main.bounds.height * 0.1 + 50)
-          .background(color)
-          .onTapGesture {
-            onExpand()
-          }
-          .mask(
-            GeometryReader { proxy in
-              let scaleWidth = proxy.size.width / 1000
-              let scaleHeight = proxy.size.height / 1100
-              
-              LottieView(lottieView: $blobView)
-                .scaleEffect(x: scaleWidth, y: scaleHeight, anchor: .topLeading)
-            }
-          )
-      }
+  func LiquidCard(title: String, color: SwiftUI.Color, action: @escaping () -> ()) -> some View {
+    if #available(iOS 15.0, *) {
+      Text(title)
+        .font(.system(size: 20))
+        .bold()
+        .frame(width: 160, height: 110)
+        .background(color)
+        .onTapGesture {
+          action()
+        }
+        .mask {
+          LottieView(lottieView: $blobView)
+            .scaleEffect(x: 0.15, y: 0.1, anchor: .topLeading)
+        }
+    } else {
+      Text(title)
+        .font(.system(size: 20))
+        .bold()
+        .foregroundColor(Color(.label))
+        .frame(width: 160, height: 110)
+        .background(color)
+        .onTapGesture {
+          action()
+        }
+        .mask(
+          LottieView(lottieView: $blobView)
+            .scaleEffect(x: 0.15, y: 0.1, anchor: .topLeading)
+        )
+    }
+  }
+}
+
+struct SlimeButton_Previews: PreviewProvider {
+  static var previews: some View {
+    SlimeButton(title: "슬라임", color: .blue) {
+      print("꿀렁꿀렁")
     }
   }
 }
