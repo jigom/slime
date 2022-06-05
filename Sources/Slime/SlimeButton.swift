@@ -16,7 +16,7 @@ public struct SlimeButton: View {
   }
   
   public var body: some View {
-    LiquidCard(title: title, color: color) {
+    liquidBlob(title: title, color: color) {
       SoundManager.shared.playBlob()
       
       blobView.animationSpeed = 5
@@ -28,7 +28,7 @@ public struct SlimeButton: View {
   }
   
   @ViewBuilder
-  func LiquidCard(title: String, color: SwiftUI.Color, action: @escaping () -> ()) -> some View {
+  func liquidBlob(title: String, color: SwiftUI.Color, action: @escaping () -> ()) -> some View {
     if #available(iOS 15.0, *) {
       Text(title)
         .font(.system(size: 20))
