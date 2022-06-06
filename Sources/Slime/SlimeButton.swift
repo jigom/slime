@@ -2,59 +2,83 @@ import SwiftUI
 import Lottie
 
 public struct SlimeButton: View {
-  @State var pressBlob = false
-  @State var blobView = AnimationView(name: "Blob", bundle: .module)
-  
-  let title: String
-  let color: SwiftUI.Color
-  let action: () -> Void
-  
-  public init(title: String, color: SwiftUI.Color, action: @escaping () -> Void) {
-    self.title = title
-    self.color = color
-    self.action = action
+  public enum BlobSpeed {
+    case slow
+    case normal
+    case fast
   }
   
+  @State private var pressBlob = false
+  @State private var blobView = AnimationView(name: "Blob", bundle: .module)
+  
+  @State public var title = ""
+  @State public var scale: CGFloat = 1.0
+  @State public var blobColor = Color.yellow
+  @State public var titleColor = Color.red
+  @State public var speed = BlobSpeed.normal
+  @State public var loop = false
+  
+  public let action: (() -> Void)?
+  
   public var body: some View {
-    liquidBlob(title: title, color: color) {
+    liquidBlob(title: title, blobColor: blobColor, titleColor: titleColor) {
       SoundManager.shared.playBlob()
       
-      blobView.animationSpeed = 5
-      blobView.play(fromProgress: pressBlob ? 0 : 0.1, toProgress: pressBlob ? 0.1 : 0)
+      blobView.play(fromProgress: pressBlob ? 0 : 0.5, toProgress: pressBlob ? 0.5 : 1)
       
       pressBlob.toggle()
-      self.action()
+      
+      if let action = self.action {
+        action()
+      }
     }
+    .scaleEffect(x: scale, y: scale)
   }
   
   @ViewBuilder
-  func liquidBlob(title: String, color: SwiftUI.Color, action: @escaping () -> ()) -> some View {
+  private func liquidBlob(title: String, blobColor: SwiftUI.Color, titleColor: SwiftUI.Color, action: @escaping () -> ()) -> some View {
     if #available(iOS 15.0, *) {
       Text(title)
-        .font(.system(size: 20))
+        .font(.title)
         .bold()
-        .frame(width: 160, height: 110)
-        .background(color)
+        .foregroundColor(titleColor)
+        .frame(width: 300, height: 300)
+        .background(blobColor)
         .onTapGesture {
           action()
         }
+        .onAppear {
+          switch speed {
+          case .slow:
+            blobView.animationSpeed = 1
+          case .normal:
+            blobView.animationSpeed = 3
+          case .fast:
+            blobView.animationSpeed = 5
+          }
+          
+          if loop {
+            blobView.play()
+            blobView.loopMode = .autoReverse
+          }
+        }
         .mask {
           LottieView(lottieView: $blobView)
-            .scaleEffect(x: 0.15, y: 0.1, anchor: .topLeading)
+            .scaleEffect(x: 0.29, y: 0.27, anchor: .topLeading)
         }
     } else {
       Text(title)
-        .font(.system(size: 20))
+        .font(.title)
         .bold()
-        .foregroundColor(Color(.label))
-        .frame(width: 160, height: 110)
-        .background(color)
+        .foregroundColor(titleColor)
+        .frame(width: 300, height: 300)
+        .background(blobColor)
         .onTapGesture {
           action()
         }
         .mask(
           LottieView(lottieView: $blobView)
-            .scaleEffect(x: 0.15, y: 0.1, anchor: .topLeading)
+            .scaleEffect(x: 0.29, y: 0.27, anchor: .topLeading)
         )
     }
   }
@@ -62,8 +86,8 @@ public struct SlimeButton: View {
 
 struct SlimeButton_Previews: PreviewProvider {
   static var previews: some View {
-    SlimeButton(title: "슬라임", color: .blue) {
-      print("꿀렁꿀렁")
+    SlimeButton(title: "Slime", scale: 1.5, blobColor: .red, titleColor: .yellow, speed: .slow, loop: true) {
+      print("Fluctuating")
     }
   }
 }
