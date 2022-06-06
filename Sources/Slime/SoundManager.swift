@@ -1,11 +1,11 @@
 import AVKit
 
 class SoundManager {
-  static let shared = SoundManager()
+  static public let shared = SoundManager()
   
-  var player: AVAudioPlayer?
+  private var player: AVAudioPlayer?
   
-  func playBlob() {
+  public func playBlob() {
     guard let url = Bundle.module.url(forResource: "Blob", withExtension: ".mp3") else { return }
     
     do {

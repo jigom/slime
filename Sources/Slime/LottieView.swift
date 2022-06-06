@@ -2,9 +2,9 @@ import SwiftUI
 import Lottie
 
 struct LottieView: UIViewRepresentable {
-  @Binding var lottieView: AnimationView
+  @Binding public var lottieView: AnimationView
   
-  func makeUIView(context: Context) -> UIView {
+  internal func makeUIView(context: Context) -> UIView {
     let view = UIView()
     
     view.backgroundColor = .clear
@@ -13,14 +13,12 @@ struct LottieView: UIViewRepresentable {
     return view
   }
   
-  func updateUIView(_ uiView: UIView, context: Context) {
-    // Update UI View
-  }
+  internal func updateUIView(_ uiView: UIView, context: Context) { }
   
-  func addLottieView(to rootView: UIView){
+  private func addLottieView(to rootView: UIView){
+    lottieView.currentProgress = 1
     lottieView.backgroundColor = .clear
     lottieView.translatesAutoresizingMaskIntoConstraints = false
-    lottieView.currentProgress = 1
     
     let constraints = [
       lottieView.widthAnchor.constraint(equalTo: rootView.widthAnchor),
