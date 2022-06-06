@@ -12,10 +12,10 @@ SlimeButton(title: String, scale: CGFloat, blobColor: Color, titleColor: Color, 
 - `scale` is a CGFloat type that helps to scale the size of the button. Default value is 1.0.
 - `blobColor` is a SwiftUI.Color type that decides the color for the button's blob. Default value is Color.yellow.
 - `titleColor` is a SwiftUI.Color type that decides the color for the button's text. Default value is Color.red.
-- `speed` is a enum type that determines the speed of the fluctuating blob. Default value is BlobSpeed.normal.
-- `loop` is a boolean that decides rather the blob to loop fluctuating without pressing. Default value is false.
-- `action` is a closure that executes when the button is pressed. Default value is nil.
-- You can always omit each parameters or put nil for the action.
+- `speed` is an enum type that determines the speed of the fluctuating blob. Default value is BlobSpeed.normal.
+- `loop` is a boolean that decides whether the blob fluctuates without being pressed. Default value is false.
+- `action` is a closure that executes after the button is pressed. Default value is nil.
+- You can always omit each parameter or put nil for the action.
 
 ### Example code
 
